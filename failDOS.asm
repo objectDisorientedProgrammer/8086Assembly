@@ -188,6 +188,8 @@ pongClicked:
 	call pongWindow
 	jmp mainLoop
 shutdownClicked:
+	mov ax, 2				; hide the mouse
+	int 33h
 	call shutdownWindow
 	mov tickCount, 180		; delay 10 sec
 	call delay
@@ -243,25 +245,25 @@ loadingLoop:
 loadingScreen endp
 ; This is the ". . ." animation
 loadingAnimation proc
-	drawRect 100, 0, screenXmax, screenYmax, 0h ; clear loading msg
+	;drawRect 100, 0, screenXmax, screenYmax, 0h ; clear loading msg
 	
 	cursor 13, 10
 	printm loadingMsg2
 	mov tickCount, 18	; 1 sec delay
 	call delay
-	drawRect 100, 0, 180, screenYmax, 0h ; clear loading msg
+	drawRect 100, 140, 180, screenYmax, 0h ; clear loading msg
 	
 	cursor 13, 10
 	printm loadingMsg3
 	mov tickCount, 18	; 1 sec delay
 	call delay
-	drawRect 100, 0, 180, screenYmax, 0h ; clear loading msg
+	drawRect 100, 140, 180, screenYmax, 0h ; clear loading msg
 
 	cursor 13, 10
 	printm loadingMsg4
 	mov tickCount, 18	; 1 sec delay
 	call delay
-	drawRect 100, 0, 180, screenYmax, 0h ; clear loading msg
+	drawRect 100, 140, 180, screenYmax, 0h ; clear loading msg
 	ret
 loadingAnimation endp
 ; Draw the desktop and all its glory
