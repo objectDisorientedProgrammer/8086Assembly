@@ -1,5 +1,17 @@
 ; Assignment #7 - Conditional Processing
 ; created March 5, 2012 by Douglas Chidester. Finished [3/7/12]
+
+addLineItem MACRO row, col, text
+	mov ah, 2	; set cursor position
+	mov dh, row	; row
+	mov dl, col	; col
+	mov bh, 0	; video page 0
+	int 10h
+	mov dx, offset text ; display text
+	mov ah, 9
+	int 21h
+ENDM
+
 .model small
 .stack 100h
 
@@ -12,6 +24,8 @@ choice4 db 0B3h,"  4. menu item four  ",0B3h,0Dh,0Ah,'$'
 boxBtm db  0C0h, 21 dup(0C4h), 0D9h, 0Dh, 0Ah, '$'
 row = 5
 col = 26
+boxStartRow = 4
+boxStartCol = 5
 .code
 main proc
 	mov ax, @data ; get access to data
@@ -29,13 +43,14 @@ one:
 	mov bh, 21h	; green bg, blue text
 	int 10h
 	mov ah, 2	; set cursor position
-	mov dh, 5	; row
+	mov dh, row	; row
 	mov dl, 5	; col
 	mov bh, 0	; video page 0
 	int 10h
 	mov ah, 9	; output
 	mov dx, offset choice1 ; display 1st choice
 	int 21h
+
 	mov ah, 10h	; wait for keystroke
 	int 16h
 	cmp ah, 48h	; if up arrow, jump to 4
@@ -158,24 +173,23 @@ makeBox proc
 	int 10h
 	
 	; add top
-	mov ah, 2	; set cursor position
-	mov dh, 4	; row 4
-	mov dl, 5	; col
-	mov bh, 0	; video page 0
-	int 10h
-	mov dx, offset boxTop ; display top of box
-	mov ah, 9
-	int 21h
+	addLineItem boxStartRow, boxStartCol, boxTop
 
 	; add item 1
-	mov ah, 2	; set cursor position
-	mov dh, row	; row 5
-	mov dl, 5	; col
-	mov bh, 0	; video page 0
-	int 10h
-	mov dx, offset choice1 ; display 1st choice
-	mov ah, 9
-	int 21h
+	;push ax
+	;mov ah, boxStartRow
+	;add ah, 1
+	; boxStartRow + 1
+	addLineItem 5, boxStartCol, boxTop
+	;pop ax
+	;mov ah, 2	; set cursor position
+	;mov dh, row	; row 5
+	;mov dl, 5	; col
+	;mov bh, 0	; video page 0
+	;int 10h
+	;mov dx, offset choice1 ; display 1st choice
+	;mov ah, 9
+	;int 21h
 	
 	; add item 2
 	mov ah, 2		; set cursor position
@@ -209,7 +223,7 @@ makeBox proc
 	
 	; add top
 	mov ah, 2	; set cursor position
-	mov dh, 9	; row 9
+	mov dh, row+4	; row 9
 	mov dl, 5	; col 5
 	mov bh, 0	; video page 0
 	int 10h
