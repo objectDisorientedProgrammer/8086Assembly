@@ -1,15 +1,25 @@
 ; Assignment #7 - Conditional Processing
 ; created March 5, 2012 by Douglas Chidester. Finished [3/7/12]
 
-addLineItem MACRO rowm, colm, text
+setCursorPosition MACRO rowm, colm, videoPage
+	push ax
+	push dx
+	push bx
+	mov ah, 2         ; set cursor position
+	mov dh, rowm      ; row
+	mov dl, colm      ; col
+	mov bh, videoPage ; video page
+	int 10h
+	pop bx
+	pop dx
+	pop ax
+ENDM
+
+addLineItem MACRO rowm, colm, text, videoPage
 	push ax ; save registers
 	push bx
 	push dx
-	mov ah, 2    ; set cursor position
-	mov dh, rowm ; row
-	mov dl, colm ; col
-	mov bh, 0    ; video page 0
-	int 10h
+	setCursorPosition rowm, colm, videoPage
 	mov dx, offset text ; display text
 	mov ah, 9
 	int 21h
@@ -32,6 +42,8 @@ row = 5
 col = 26
 boxStartRow = 4
 boxStartCol = 5
+defaultVideoPage = 0
+
 .code
 main proc
 	mov ax, @data ; get access to data
@@ -139,9 +151,9 @@ four:
 	je three
 	cmp ah, 50h ; if down arrow, jump to 1(using 1/2 step because masm said je was out of range)
 	je halfToOne
-	jmp exit
-	; reset cursor for DOS then exit
-exit:
+	
+exit: ; reset cursor for DOS then exit
+	call clearscreen
 	mov ah, 2	; set cursor position
 	mov dh, 24	; row
 	mov dl, 0	; col
@@ -150,6 +162,7 @@ exit:
 	mov ax, 4C00h ; return to DOS
 	int 21h
 main endp
+
 clearscreen proc
 	mov ah, 6	; move screen
 	mov al, 0	; whole screen
@@ -172,37 +185,33 @@ makeBox proc
 	mov dl, 27	; dl-lower right col
 	mov bh, 12h	; blue bg, green text
 	int 10h
-	mov ah, 2           ; set cursor position
-	mov dh, boxStartRow	; row 5
-	mov dl, boxStartCol	; col 5
-	mov bh, 0           ; video page 0
-	int 10h
+	setCursorPosition boxStartRow, boxStartCol, defaultVideoPage
 
 	; add menu items
 	mov cl, boxStartRow
 	
 	; add top
-	addLineItem cl, boxStartCol, boxTop
+	addLineItem cl, boxStartCol, boxTop, defaultVideoPage
 
 	; add item 1
 	inc cl
-	addLineItem cl, boxStartCol, choice1
+	addLineItem cl, boxStartCol, choice1, defaultVideoPage
 	
 	; add item 2
 	inc cl
-	addLineItem cl, boxStartCol, choice2
+	addLineItem cl, boxStartCol, choice2, defaultVideoPage
 	
 	; add item 3
 	inc cl
-	addLineItem cl, boxStartCol, choice3
+	addLineItem cl, boxStartCol, choice3, defaultVideoPage
 
 	; add item 4
 	inc cl
-	addLineItem cl, boxStartCol, choice4
+	addLineItem cl, boxStartCol, choice4, defaultVideoPage
 	
 	; add bottom
 	inc cl
-	addLineItem cl, boxStartCol, boxBtm
+	addLineItem cl, boxStartCol, boxBtm, defaultVideoPage
 	
 	ret
 makeBox endp
