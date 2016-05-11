@@ -1,15 +1,21 @@
 ; Assignment #7 - Conditional Processing
 ; created March 5, 2012 by Douglas Chidester. Finished [3/7/12]
 
-addLineItem MACRO row, col, text
-	mov ah, 2	; set cursor position
-	mov dh, row	; row
-	mov dl, col	; col
-	mov bh, 0	; video page 0
+addLineItem MACRO rowm, colm, text
+	push ax ; save registers
+	push bx
+	push dx
+	mov ah, 2    ; set cursor position
+	mov dh, rowm ; row
+	mov dl, colm ; col
+	mov bh, 0    ; video page 0
 	int 10h
 	mov dx, offset text ; display text
 	mov ah, 9
 	int 21h
+	pop dx ; restore registers
+	pop bx
+	pop ax
 ENDM
 
 .model small
@@ -166,70 +172,38 @@ makeBox proc
 	mov dl, 27	; dl-lower right col
 	mov bh, 12h	; blue bg, green text
 	int 10h
-	mov ah, 2	; set cursor position
-	mov dh, 5	; row 5
-	mov dl, 5	; col 5
-	mov bh, 0	; video page 0
+	mov ah, 2           ; set cursor position
+	mov dh, boxStartRow	; row 5
+	mov dl, boxStartCol	; col 5
+	mov bh, 0           ; video page 0
 	int 10h
+
+	; add menu items
+	mov cl, boxStartRow
 	
 	; add top
-	addLineItem boxStartRow, boxStartCol, boxTop
+	addLineItem cl, boxStartCol, boxTop
 
 	; add item 1
-	;push ax
-	;mov ah, boxStartRow
-	;add ah, 1
-	; boxStartRow + 1
-	addLineItem 5, boxStartCol, boxTop
-	;pop ax
-	;mov ah, 2	; set cursor position
-	;mov dh, row	; row 5
-	;mov dl, 5	; col
-	;mov bh, 0	; video page 0
-	;int 10h
-	;mov dx, offset choice1 ; display 1st choice
-	;mov ah, 9
-	;int 21h
+	inc cl
+	addLineItem cl, boxStartCol, choice1
 	
 	; add item 2
-	mov ah, 2		; set cursor position
-	mov dh, row+1	; row 6
-	mov dl, 5		; col
-	mov bh, 0		; video page 0
-	int 10h
-	mov dx, offset choice2 ; display 2nd choice
-	mov ah, 9
-	int 21h
+	inc cl
+	addLineItem cl, boxStartCol, choice2
 	
 	; add item 3
-	mov ah, 2		; set cursor position
-	mov dh, row+2	; row 7
-	mov dl, 5		; col
-	mov bh, 0		; video page 0
-	int 10h
-	mov dx, offset choice3 ; display 3rd choice
-	mov ah, 9
-	int 21h
-	
+	inc cl
+	addLineItem cl, boxStartCol, choice3
+
 	; add item 4
-	mov ah, 2		; set cursor position
-	mov dh, row+3	; row 8
-	mov dl, 5		; col
-	mov bh, 0		; video page 0
-	int 10h
-	mov dx, offset choice4 ; display 4th choice
-	mov ah, 9
-	int 21h
+	inc cl
+	addLineItem cl, boxStartCol, choice4
 	
-	; add top
-	mov ah, 2	; set cursor position
-	mov dh, row+4	; row 9
-	mov dl, 5	; col 5
-	mov bh, 0	; video page 0
-	int 10h
-	mov dx, offset boxBtm ; display bottom of box
-	mov ah, 9
-	int 21h
+	; add bottom
+	inc cl
+	addLineItem cl, boxStartCol, boxBtm
+	
 	ret
 makeBox endp
 end main
