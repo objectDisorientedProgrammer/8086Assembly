@@ -1,18 +1,20 @@
 ; Assignment #7 - Conditional Processing
 ; created March 5, 2012 by Douglas Chidester. Finished [3/7/12]
 
+; write a string to the screen ============================
+printm MACRO string
+	mov ah, 09h
+	mov dx, offset string
+	int 21h
+ENDM
+
+; position the cursor          ============================
 setCursorPosition MACRO rowm, colm, videoPage
-	push ax
-	push dx
-	push bx
 	mov ah, 2         ; set cursor position
 	mov dh, rowm      ; row
 	mov dl, colm      ; col
 	mov bh, videoPage ; video page
 	int 10h
-	pop bx
-	pop dx
-	pop ax
 ENDM
 
 addLineItem MACRO rowm, colm, text, videoPage
@@ -20,9 +22,7 @@ addLineItem MACRO rowm, colm, text, videoPage
 	push bx
 	push dx
 	setCursorPosition rowm, colm, videoPage
-	mov dx, offset text ; display text
-	mov ah, 9
-	int 21h
+	printm text
 	pop dx ; restore registers
 	pop bx
 	pop ax
@@ -60,14 +60,17 @@ one:
 	mov dl, col	; lower right col
 	mov bh, 21h	; green bg, blue text
 	int 10h
-	mov ah, 2	; set cursor position
-	mov dh, row	; row
-	mov dl, 5	; col
-	mov bh, 0	; video page 0
-	int 10h
-	mov ah, 9	; output
-	mov dx, offset choice1 ; display 1st choice
-	int 21h
+
+	setCursorPosition row, row, 0
+	;mov ah, 2	; set cursor position
+	;mov dh, row	; row
+	;mov dl, 5	; col
+	;mov bh, 0	; video page 0
+	;int 10h
+	printm choice1
+	;mov ah, 9	; output
+	;mov dx, offset choice1 ; display choice
+	;int 21h
 
 	mov ah, 10h	; wait for keystroke
 	int 16h
