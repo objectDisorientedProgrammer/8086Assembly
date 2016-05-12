@@ -52,25 +52,12 @@ main proc
 	; move the cursor to item one and highlight that line
 one:
 	call clearscreen ; clear screen
-	call makeBox  ; create box
-	mov ah, 6
-	mov ch, row ; upper left row
-	mov cl, 6   ; upper left col
-	mov dh, row ; lower right row
-	mov dl, col	; lower right col
-	mov bh, 21h	; green bg, blue text
-	int 10h
+	call makeBox     ; create box
+	call highlight   ; invert colors
 
-	setCursorPosition row, row, 0
-	;mov ah, 2	; set cursor position
-	;mov dh, row	; row
-	;mov dl, 5	; col
-	;mov bh, 0	; video page 0
-	;int 10h
+	setCursorPosition row, boxStartCol, 0
+
 	printm choice1
-	;mov ah, 9	; output
-	;mov dx, offset choice1 ; display choice
-	;int 21h
 
 	mov ah, 10h	; wait for keystroke
 	int 16h
@@ -218,4 +205,15 @@ makeBox proc
 	
 	ret
 makeBox endp
+
+highlight proc
+	mov ah, 6
+	mov ch, row ; upper left row
+	mov cl, 6   ; upper left col
+	mov dh, row ; lower right row
+	mov dl, col	; lower right col
+	mov bh, 21h	; green bg, blue text
+	int 10h
+highlight endp
+
 end main
