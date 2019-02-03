@@ -12,9 +12,11 @@ This example was written for a Linux environment and may need to be adapted slig
 Start DOSBox and enter the following commands:
 
     mount c: ~/<path to folder containing executable>/
+    c:
     FAILDOS.EXE
 
 For example, if you download FAILDOS.EXE to ~/Downloads, the `mount` command will make ~/Downloads your root (c:) directory:
 
     mount c: ~/Downloads/
+    c:
     FAILDOS.EXE
