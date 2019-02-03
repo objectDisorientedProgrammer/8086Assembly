@@ -5,15 +5,18 @@
 ; 
 ; This program simulates a GUI for DOS
 
+;==========================================================
+;=================== Macro functions ======================
+;==========================================================
 
-; write a string to the screen ============================
+; write a string to the screen
 printm macro string
     mov ah, 09h
     mov dx, offset string
     int 21h
     endm
 
-; move the cursor to row r, column c ======================
+; move the cursor to row r, column c
 cursor macro row, col
     mov ah, 02
     mov bh, 00
@@ -22,7 +25,7 @@ cursor macro row, col
     int 10h
     endm
 
-; draw a box ==============================================
+; draw a box
 drawRect macro startRow, startCol, endRow, endCol, color
     local outterLoop, innerLoop
     mov dx, startRow
