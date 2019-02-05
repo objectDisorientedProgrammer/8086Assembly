@@ -1,19 +1,22 @@
-8086 Assembly
-=============
-A collection of assembly programs. **All must be run through dosbox.**
+# FailDos
+Final project for CS131 - FAILDOS
 
-### FailDOS
-A GUI that represents a desktop environment.
+**must be run through DOSBox**
 
-### Menu
-A simple, graphical menu selection program.
+# Dependencies
+* [Download the appropriate version of DOSBox](https://www.dosbox.com/download.php?main=1) for your environment.
 
-####Linux Instructions
-Start dosbox and run
+# Running
+This example was written for a Linux environment and may need to be adapted slightly to fit your needs.
 
-    mount c: ~/path/to/repo
-	C:
-	dir
-	
-These commands will list out the contents of this repo. To run an exe,
-simply type the name of the exe. e.g. MENU.EXE
+Start DOSBox and enter the following commands:
+
+    Z:\>mount c: ~/<path to folder containing executable>/
+    Z:\>c:
+    C:\>FAILDOS.EXE
+
+For example, if you download FAILDOS.EXE to ~/Downloads, the `mount` command will make ~/Downloads your root (c:) directory:
+
+    Z:\>mount c: ~/Downloads/
+    Z:\>c:
+    C:\>FAILDOS.EXE
